@@ -1,176 +1,201 @@
-#--- Project & Codering information ---
-COMP 163 - Project 1: Character Creator & Saving/Loading
-Name: Jessica Springer
-Date: 10/27/2025
+# COMP 163 - Project 1: Character Creator & Saving/Loading
 
-AI Usage: [Document any AI assistance used]
+# Name: Jessica Springer
 
-#--- Character Classes: ---
-#Warrior - High strength, low magic, high health
-#Mage - Low strength, high magic, medium health
-#Rogue - Medium strength, medium magic, low health
-#Cleric - Medium strength, high magic, high health
+# Date: 10/27/2025
 
-# Character creation
+import os
+
+# --- Calculated Stats Function ---
+
+def calculate_stats(character_class, level):
+"""
+Calculate character stats based on class and level.
+Returns a tuple: (strength, magic, health)
+"""
+character_class_lower = character_class.lower()
+
+```
+# Base stats
+strength = 5
+magic = 5
+health = 50
+
+# Adjust stats per class
+if character_class_lower == "warrior":
+    strength += 90
+    magic += 20
+    health += 45
+elif character_class_lower == "mage":
+    strength += 15
+    magic += 90
+    health += 30
+elif character_class_lower == "cleric":
+    strength += 35
+    magic += 100
+    health += 85
+elif character_class_lower == "rogue":
+    strength += 45
+    magic += 35
+    health += 25
+else:
+    # Invalid class returns base stats
+    return (strength, magic, health)
+
+# Increase stats per level
+strength += level * 5
+magic += level * 5
+health += level * 10
+
+return (strength, magic, health)
+```
+
+# --- Character Creation ---
+
 def create_character(name, character_class):
-     
-    Creates a new character dictionary with calculated stats based on class
-    Loops until a valid class is entered #So user can keep using inputs until they do the right one
+"""
+Create a new character dictionary with stats, gold, and equipment.
+Returns None if class is invalid.
+"""
+valid_classes = ["Warrior", "Mage", "Cleric", "Rogue"]
+if character_class not in valid_classes:
+return None
 
-    Level = 1
-    strength, health, magic = calc_stats(character_class, level)
+```
+level = 1
+strength, magic, health = calculate_stats(character_class, level)
 
-    valid_classes = ["Warrior", "Mage", "Cleric", "Rogue"]
-    if character_class not in valid_classes:
-        return None
+# Gold assignment
+gold_values = {
+    "Warrior": 200,
+    "Mage": 170,
+    "Cleric": 140,
+    "Rogue": 110
+}
+gold = gold_values.get(character_class, 50)
 
-#Bonus- Gold calculation system
-if character_class == "Warrior":
-    gold = 200
-elif character_class == "Mage":
-    gold = 170
-elif character_class == "Cleric":
-    gold = 140
-elif character_class == "Rogue":
-    gold = 110
-else:
-    gold = 50 #basic starting amount
+# Starting equipment
+equipment_values = {
+    "Warrior": ["Steel Sword", "Aluminum Shield", "Iron Armor"],
+    "Mage": ["Magic Staff", "Spellbook", "Magic Robe"],
+    "Cleric": ["Steel Mace", "Holy Symbol", "Chainmail"],
+    "Rogue": ["Steel Dagger", "Lockpick Set", "Leather Armor"]
+}
+equipment = equipment_values.get(character_class, ["Stick", "Cloth Tunic"])
 
-#Bonus- Starting equipment system
-#Ai and google was used to come up with the best items for each character
-if character_class == "Warrior":
-    equipment = ["Steel Sword", "Aluminum Sheild", "Iron Armor"]
-elif character_class == "Mage":
-    equipment = ["Magic Staff", "Spellbook", "Magic Robe"]
-elif character_class == "Cleric":
-    equipment = ["Steel Mace", "Holy SheilSymbold", "Chainmail"]
-elif character_class == "Rogue":
-    equipment = ["Steel Dagger", "Lockpick Set", "Leather Armor"]
-else:
-    equipment = ["Stick", "Cloth Tunic"] #basic character starter pack
-    
-#save_character() function formatting
+# Build character dictionary
 character = {
     "name": name,
     "class": character_class,
-    "level": 1,
+    "level": level,
     "strength": strength,
-    "magic":, magic,
+    "magic": magic,
     "health": health,
-    "gold": gold
+    "gold": gold,
+    "equipment": equipment
 }
-    
-    return character
 
-#Calculated stats and classes
+return character
+```
 
-def calculate_stats(character_class, level):
-    character_class = character_class.lower()
-    strength = 5 #fix sign
-    magic = 15
-    health = 80
-    
-    if character_class == "Warrior":
-        strength += 90
-        magic += 20
-        health += 45
-    elif character_class == "Mage":
-        strength += 15
-        magic += 90
-        health += 30
-    elif character_class == "Cleric"):
-        strength += 35
-        magic += 100
-        health += 85
-     elif character_class == "Rogue"):
-        strength += 45
-        magic += 35
-        health += 10
-    else:
-        print("Invlaid!")
-        return calculate_stats("Warrior", level)
-    return strength, health, magic
-  
-   # File formatting and character saving
+# --- Display Character ---
+
+def display_character(character):
+print("\n=== CHARACTER SHEET ===")
+print(f"Name: {character.get('name', '')}")
+print(f"Class: {character.get('class', '')}")
+print(f"Level: {character.get('level', 0)}")
+print(f"Strength: {character.get('strength', 0)}")
+print(f"Magic: {character.get('magic', 0)}")
+print(f"Health: {character.get('health', 0)}")
+print(f"Gold: {character.get('gold', 0)}")
+print(f"Equipment: {', '.join(character.get('equipment', []))}")
+
+# --- Level Up Function ---
+
+def level_up(character):
+character["level"] += 1
+strength, magic, health = calculate_stats(character["class"], character["level"])
+character["strength"] = strength
+character["magic"] = magic
+character["health"] = health
+print(f"\n{character['name']} has leveled up to level {character['level']}! Congratulations!")
+
+# --- Save Character to File ---
 
 def save_character(character, filename):
-    import os
-    if no isinstance(character, dict) or not filename:
-    return False
+if not isinstance(character, dict) or not filename:
+return False
+
+```
 directory = os.path.dirname(filename)
 if directory and not os.path.exists(directory):
-    return False
-    
-    with open(filename, "w") as file:
-        file.write(f"Character Name: {character['name']}\n")
-        file.write(f"Class: {character['class']}\n")
-        file.write(f"Level: {character['level']}\n")
-        file.write(f"Strength: {character['strength']}\n")
-        file.write(f"Magic: {character['magic']}\n")
-        file.write(f"Health: {character['health']}\n")
-        file.write(f"Gold: {character['gold']}\n")
-    return True
+    os.makedirs(directory)
 
-#Character loading
-import os
+try:
+    with open(filename, "w") as file:
+        for key, value in character.items():
+            if isinstance(value, list):
+                value_str = ", ".join(value)
+                file.write(f"{key}: {value_str}\n")
+            else:
+                file.write(f"{key}: {value}\n")
+    return True
+except:
+    return False
+```
+
+# --- Load Character from File ---
 
 def load_character(filename):
-    if not os.path.exists(filename):
-        return None
+if not os.path.exists(filename):
+return None
 
-    file = open(filename, 'r')
-    lines = file.readlines()
-    file.close()
-
+```
 character = {}
-for line in lines:
-    if ": " not in line:
-        continue
-    key, value = line.strip().split(": ", 1)
-    key = key.lower().replace("character ", "")
-    if value.isdigit():
-        value = int(value)
-    character[key] = value
+with open(filename, "r") as file:
+    lines = file.readlines()
+    for line in lines:
+        if ": " not in line:
+            continue
+        key, value = line.strip().split(": ", 1)
+        key = key.lower()
+        if value.isdigit():
+            value = int(value)
+        elif ", " in value:
+            value = value.split(", ")
+        character[key] = value
 
 if len(character) == 0:
     return None
+return character
+```
 
-#Character display
+# --- Main Program ---
 
-def display_character(character):
-    print("=== CHARACTER SHEET ===")
-    print(f"Name: {character.get('name', '')}")
-    print(f"Class: {character.get('class', '')}")
-    print(f"Level: {character.get('level', 0)}")
-    print(f"Strength: {character.get('strength', 0)}")
-    print(f"Magic: {character.get('magic', 0)}")
-    print(f"Health: {character.get('health', 0)}")
-    print(f"Gold: {character.get('gold', 0)}")
+if **name** == "**main**":
+print("=== WELCOME TO CHARACTER CREATOR ===")
 
-#leveling up
+```
+name = input("Enter your character's name: ").strip()
 
-def level_up(character):
-    character["level"] += 1
-    s, h, m = calculate_stats(character["class"], character["level"])
-    character["strength"] = s
-    character["health"] = h
-    character["magic"] = m
-    print(f"\n{character['name']} has leveled up to level {character['leve;']}! Congratulations!)
+while True:
+    character_class = input("Choose a class (Warrior/Mage/Cleric/Rogue): ").strip()
+    if character_class in ["Warrior", "Mage", "Cleric", "Rogue"]:
+        break
+    print("Invalid class! Please choose from Warrior, Mage, Cleric, or Rogue.")
 
-# Function Testing 
-if __name__ == "__main__":
-    print("=== CHARACTER CREATOR ===")
-    n = input("Please enter your name: ")
-    c = input("Please choose a class (Warrior/Mage/Cleric/Rogue): ")
+char = create_character(name, character_class)
 
-char = create_character(n, c)
-if char is not None:
-    disp_character(char)
-    level_up(char)
-    disp_character(char)
-    save_character(char, "my_character.txt")
-    loaded = load_character("my_character.txt")
-    print("\nloaded character from file:")
-    disp_character(loaded)
-else:
-    print("The class you have chosen is invalid. Please choose from Warrior, Mage, Cleric, or Rogue")
+display_character(char)
+
+# Level up example
+level_up(char)
+display_character(char)
+
+# Save and load example
+save_character(char, "my_character.txt")
+loaded_char = load_character("my_character.txt")
+print("\nLoaded character from file:")
+display_character(loaded_char)
+```
