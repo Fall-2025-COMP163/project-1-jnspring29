@@ -38,31 +38,24 @@ return (strength, magic, health)
 
 # --- Create Character ---
 
-def create_character(name, character_class):
-"""
-Returns a character dictionary with required stats.
-Returns None if class is invalid.
-"""
-valid_classes = ["Warrior", "Mage", "Rogue", "Cleric"]
-if character_class not in valid_classes:
-return None
-
-```
+def create_character (name, character_class):
+Creates a new character dictionary with calculated stats
+Returns: dictionary with keys: name, class, level, strength, magic, health, gold
+IT TE TE
 level = 1
-strength, magic, health = calculate_stats(character_class, level)
-
-gold_values = {"Warrior": 200, "Mage": 170, "Rogue": 110, "Cleric": 140}
-gold = gold_values[character_class]
-
-return {
-    "name": name,
-    "class": character_class,
-    "level": level,
-    "strength": strength,
-    "magic": magic,
-    "health": health,
-    "gold": gold
-}
+stats = calculate_stats(character_class, level)
+if character _class not in ["Warrior", "Mage", "Rogue", "Cleric"]:
+return None # Invalid class
+else: # if class is valid the character is created
+new_character = {
+"name": name,
+"class": character_class,
+"level": level,
+"strength": stats[0],
+"magic": stats[1],
+"health": stats[2],
+"gold": 100
+return new_character
 ```
 
 # --- Display Character ---
