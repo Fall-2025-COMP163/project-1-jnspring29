@@ -6,7 +6,7 @@
 
 # Date: 10/27/2025
 
-# AI Usage: Assisted in implementing functions and debugging
+# AI Usage: Assisted in debugging and ensuring autograder compatibility
 
 import os
 
@@ -36,28 +36,12 @@ health += 10 * (level - 1)
 return (strength, magic, health)
 ```
 
-# --- Starting Equipment & Gold ---
-
-EQUIPMENT = {
-"Warrior": ["Steel Sword", "Aluminum Shield", "Iron Armor"],
-"Mage": ["Magic Staff", "Spellbook", "Magic Robe"],
-"Rogue": ["Steel Dagger", "Lockpick Set", "Leather Armor"],
-"Cleric": ["Steel Mace", "Holy Symbol", "Chainmail"]
-}
-
-GOLD = {
-"Warrior": 200,
-"Mage": 170,
-"Rogue": 110,
-"Cleric": 140
-}
-
 # --- Create Character ---
 
 def create_character(name, character_class):
 """
-Returns a character dictionary with stats, gold, level, and starting equipment.
-Returns None if invalid class.
+Returns a character dictionary with required stats.
+Returns None if class is invalid.
 """
 valid_classes = ["Warrior", "Mage", "Rogue", "Cleric"]
 if character_class not in valid_classes:
@@ -67,25 +51,25 @@ return None
 level = 1
 strength, magic, health = calculate_stats(character_class, level)
 
-character = {
+gold_values = {"Warrior": 200, "Mage": 170, "Rogue": 110, "Cleric": 140}
+gold = gold_values[character_class]
+
+return {
     "name": name,
     "class": character_class,
     "level": level,
     "strength": strength,
     "magic": magic,
     "health": health,
-    "gold": GOLD[character_class],
-    "equipment": EQUIPMENT[character_class].copy()
+    "gold": gold
 }
-
-return character
 ```
 
 # --- Display Character ---
 
 def display_character(character):
 """
-Prints character info in formatted sheet.
+Prints character info in required format.
 """
 print(f"Character Name: {character.get('name','')}")
 print(f"Class: {character.get('class','')}")
@@ -94,28 +78,24 @@ print(f"Strength: {character.get('strength',0)}")
 print(f"Magic: {character.get('magic',0)}")
 print(f"Health: {character.get('health',0)}")
 print(f"Gold: {character.get('gold',0)}")
-print(f"Equipment: {', '.join(character.get('equipment',[]))}")
 
 # --- Level Up ---
 
 def level_up(character):
 """
-Increase character level by 1, recalculate stats, optionally give bonus gold.
+Increase character level by 1 and recalculate stats.
 """
 character["level"] += 1
 s, m, h = calculate_stats(character["class"], character["level"])
 character["strength"] = s
 character["magic"] = m
 character["health"] = h
-# Example: give 10 extra gold on level up
-character["gold"] += 10
 
 # --- Save Character ---
 
 def save_character(character, filename):
 """
-Save character to file in required format.
-Includes equipment as comma-separated string.
+Save character to file in exact required format.
 """
 if not isinstance(character, dict) or not filename:
 return False
@@ -131,7 +111,6 @@ f.write(f"Strength: {character['strength']}\n")
 f.write(f"Magic: {character['magic']}\n")
 f.write(f"Health: {character['health']}\n")
 f.write(f"Gold: {character['gold']}\n")
-f.write(f"Equipment: {', '.join(character.get('equipment',[]))}\n")
 return True
 except:
 return False
@@ -141,7 +120,6 @@ return False
 def load_character(filename):
 """
 Load character from file. Returns dict or None if file missing/invalid.
-Parses numeric values and equipment list.
 """
 if not os.path.exists(filename):
 return None
@@ -153,8 +131,6 @@ continue
 key, value = line.strip().split(": ", 1)
 if key in ["Level","Strength","Magic","Health","Gold"]:
 value = int(value)
-elif key == "Equipment":
-value = [item.strip() for item in value.split(",")]
 char_key = "name" if key=="Character Name" else key.lower()
 character[char_key] = value
 return character if character else None
