@@ -96,6 +96,7 @@ character["health"] = h
 def save_character(character, filename):
 """
 Save character to file in exact required format.
+Returns True on success, False on failure.
 """
 if not isinstance(character, dict) or not filename:
 return False
@@ -130,7 +131,10 @@ if ": " not in line:
 continue
 key, value = line.strip().split(": ", 1)
 if key in ["Level","Strength","Magic","Health","Gold"]:
+try:
 value = int(value)
+except:
+value = 0
 char_key = "name" if key=="Character Name" else key.lower()
 character[char_key] = value
 return character if character else None
