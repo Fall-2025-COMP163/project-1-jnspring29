@@ -16,24 +16,24 @@ def calculate_stats(character_class, level):
 """
 Returns a tuple (strength, magic, health) based on class and level.
 """
-base_stats = {
-"Warrior": (95, 35, 125),
-"Mage": (20, 95, 80),
-"Rogue": (50, 50, 60),
-"Cleric": (40, 90, 120)
-}
-if character_class not in base_stats:
-return (0, 0, 0)
+  base_stats = {
+  "Warrior": (95, 35, 125),
+  "Mage": (20, 95, 80),
+  "Rogue": (50, 50, 60),
+  "Cleric": (40, 90, 120)
+  }
+  if character_class not in base_stats:
+    return (0, 0, 0)
 
 ```
-strength, magic, health = base_stats[character_class]
+  strength, magic, health = base_stats[character_class]
 
 # Level scaling
-strength += 5 * (level - 1)
-magic += 5 * (level - 1)
-health += 10 * (level - 1)
+  strength += 5 * (level - 1)
+  magic += 5 * (level - 1)
+  health += 10 * (level - 1)
 
-return (strength, magic, health)
+  return (strength, magic, health)
 ```
 
 # --- Create Character ---
