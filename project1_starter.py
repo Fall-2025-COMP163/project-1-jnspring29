@@ -39,23 +39,25 @@ return (strength, magic, health)
 # --- Create Character ---
 
 def create_character (name, character_class):
-Creates a new character dictionary with calculated stats
-Returns: dictionary with keys: name, class, level, strength, magic, health, gold
-IT TE TE
-level = 1
-stats = calculate_stats(character_class, level)
-if character _class not in ["Warrior", "Mage", "Rogue", "Cleric"]:
-return None # Invalid class
-else: # if class is valid the character is created
-new_character = {
-"name": name,
-"class": character_class,
-"level": level,
-"strength": stats[0],
-"magic": stats[1],
-"health": stats[2],
-"gold": 100
-return new_character
+#Creates a new character dictionary with calculated stats
+#Returns: dictionary with keys: name, class, level, strength, magic, health, gold
+#IT TE TE
+  level = 1
+  stats = calculate_stats(character_class, level)
+  if character_class not in ["Warrior", "Mage", "Rogue", "Cleric"]: 
+  #this line should return an error
+    return None # Invalid class
+  else: # if class is valid the character is created
+    new_character = {
+    "name": name,
+    "class": character_class,
+    "level": level,
+    "strength": stats[0],
+    "magic": stats[1],
+    "health": stats[2],
+    "gold": 100
+    }
+    return new_character
 ```
 
 # --- Display Character ---
@@ -64,13 +66,13 @@ def display_character(character):
 """
 Prints character info in required format.
 """
-print(f"Character Name: {character.get('name','')}")
-print(f"Class: {character.get('class','')}")
-print(f"Level: {character.get('level',0)}")
-print(f"Strength: {character.get('strength',0)}")
-print(f"Magic: {character.get('magic',0)}")
-print(f"Health: {character.get('health',0)}")
-print(f"Gold: {character.get('gold',0)}")
+  print(f"Character Name: {character.get('name','')}")
+  print(f"Class: {character.get('class','')}")
+  print(f"Level: {character.get('level',0)}")
+  print(f"Strength: {character.get('strength',0)}")
+  print(f"Magic: {character.get('magic',0)}")
+  print(f"Health: {character.get('health',0)}")
+  print(f"Gold: {character.get('gold',0)}")
 
 # --- Level Up ---
 
@@ -78,11 +80,11 @@ def level_up(character):
 """
 Increase character level by 1 and recalculate stats.
 """
-character["level"] += 1
-s, m, h = calculate_stats(character["class"], character["level"])
-character["strength"] = s
-character["magic"] = m
-character["health"] = h
+  character["level"] += 1
+  s, m, h = calculate_stats(character["class"], character["level"])
+  character["strength"] = s
+  character["magic"] = m
+  character["health"] = h
 
 # --- Save Character ---
 
@@ -91,23 +93,23 @@ def save_character(character, filename):
 Save character to file in exact required format.
 Returns True on success, False on failure.
 """
-if not isinstance(character, dict) or not filename:
-return False
-directory = os.path.dirname(filename)
-if directory and not os.path.exists(directory):
-os.makedirs(directory)
-try:
-with open(filename, "w") as f:
-f.write(f"Character Name: {character['name']}\n")
-f.write(f"Class: {character['class']}\n")
-f.write(f"Level: {character['level']}\n")
-f.write(f"Strength: {character['strength']}\n")
-f.write(f"Magic: {character['magic']}\n")
-f.write(f"Health: {character['health']}\n")
-f.write(f"Gold: {character['gold']}\n")
-return True
-except:
-return False
+  if not isinstance(character, dict) or not filename:
+    return False
+  directory = os.path.dirname(filename)
+  if directory and not os.path.exists(directory):
+    os.makedirs(directory)
+  try:
+    with open(filename, "w") as f:
+        f.write(f"Character Name: {character['name']}\n")
+        f.write(f"Class: {character['class']}\n")
+        f.write(f"Level: {character['level']}\n")
+        f.write(f"Strength: {character['strength']}\n")
+        f.write(f"Magic: {character['magic']}\n")
+        f.write(f"Health: {character['health']}\n")
+        f.write(f"Gold: {character['gold']}\n")
+        return True
+  except:
+    return False
 
 # --- Load Character ---
 
@@ -115,45 +117,45 @@ def load_character(filename):
 """
 Load character from file. Returns dict or None if file missing/invalid.
 """
-if not os.path.exists(filename):
-return None
-character = {}
-with open(filename, "r") as f:
-for line in f:
-if ": " not in line:
-continue
-key, value = line.strip().split(": ", 1)
-if key in ["Level","Strength","Magic","Health","Gold"]:
-try:
-value = int(value)
-except:
-value = 0
-char_key = "name" if key=="Character Name" else key.lower()
-character[char_key] = value
-return character if character else None
+  if not os.path.exists(filename):
+    return None
+  character = {}
+  with open(filename, "r") as f:
+    for line in f:
+      if ": " not in line:
+        continue
+      key, value = line.strip().split(": ", 1)
+      if key in ["Level","Strength","Magic","Health","Gold"]:
+        try:
+          value = int(value)
+        except:
+          value = 0
+      char_key = "name" if key=="Character Name" else key.lower()
+      character[char_key] = value
+  return character if character else None
 
 # --- Main Program ---
 
 if **name** == "**main**":
-print("=== Character Creator ===")
-name = input("Enter character name: ")
-while True:
-char_class = input("Choose class (Warrior/Mage/Rogue/Cleric): ")
-if char_class in ["Warrior","Mage","Rogue","Cleric"]:
-break
-print("Invalid class! Please choose a valid option.")
+  print("=== Character Creator ===")
+  name = input("Enter character name: ")
+  while True:
+    char_class = input("Choose class (Warrior/Mage/Rogue/Cleric): ")
+    if char_class in ["Warrior","Mage","Rogue","Cleric"]:
+      break
+      print("Invalid class! Please choose a valid option.")
 
 ```
-char = create_character(name, char_class)
-print("\nCharacter Sheet:")
-display_character(char)
+    char = create_character(name, char_class)
+    print("\nCharacter Sheet:")
+    display_character(char)
 
-level_up(char)
-print("\nAfter Level Up:")
-display_character(char)
+    level_up(char)
+    print("\nAfter Level Up:")
+    display_character(char)
 
-save_character(char,"my_character.txt")
-print("\nLoaded from file:")
-loaded = load_character("my_character.txt")
-display_character(loaded)
+    save_character(char,"my_character.txt")
+    print("\nLoaded from file:")
+    loaded = load_character("my_character.txt")
+    display_character(loaded)
 ```
